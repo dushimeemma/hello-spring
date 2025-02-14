@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload</title>
+</head>
+<body>
+<h2>Upload File</h2>
+<form id="uploadForm">
+    <input type="file" id="fileInput" name="file" required>
+    <button type="submit">Upload</button>
+</form>
+<p id="responseMessage"></p>
+
+<script>
+    document.getElementById("uploadForm").addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        const fileInput = document.getElementById("fileInput");
+        if (!fileInput.files.length) {
+            alert("Please select a file to upload.");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("data", fileInput.files[0]);
+
+        try {
+            const response = await fetch("http://localhost:8080/hellos", {
+                method: "POST",
+                body: formData,
+            });
+
+            if (response.ok) {
+                document.getElementById("responseMessage").innerText = "File uploaded successfully.";
+            } else {
+                document.getElementById("responseMessage").innerText = "File upload failed.";
+            }
+        } catch (error) {
+            document.getElementById("responseMessage").innerText = "Error uploading file: " + error.message;
+        }
+    });
+</script>
+</body>
+</html>
